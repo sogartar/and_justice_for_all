@@ -14,14 +14,46 @@ local setupRootTableStructure = function() {
 local buffAttributesLeveling = function() {
   gt.Const.AttributesLevelUp[gt.Const.Attributes.Hitpoints].Min += 1;
   gt.Const.AttributesLevelUp[gt.Const.Attributes.Hitpoints].Max += 1;
+  gt.Const.AttributesLevelUp[gt.Const.Attributes.Fatigue].Min += 1;
   gt.Const.AttributesLevelUp[gt.Const.Attributes.Fatigue].Max += 1;
+  gt.Const.AttributesLevelUp[gt.Const.Attributes.Bravery].Min += 1;
   gt.Const.AttributesLevelUp[gt.Const.Attributes.Bravery].Max += 1;
+  gt.Const.AttributesLevelUp[gt.Const.Attributes.Initiative].Min += 1;
   gt.Const.AttributesLevelUp[gt.Const.Attributes.Initiative].Max += 1;
-  gt.Const.AttributesLevelUp[gt.Const.Attributes.RangedDefense].Max += 1;
+
+  //gt.Const.Ajfa.AttributeLevelUpTalentBonus <- [2, 2, 2, 2, 1, 1, 1, 1];
+  //
+  //::mods_hookExactClass("entity/tactical/player", function(c) {
+  //  c.fillAttributeLevelUpValues = function(_amount, _maxOnly = false, _minOnly = false) {
+  //    if (this.m.Attributes.len() == 0) {
+  //      this.m.Attributes.resize(this.Const.Attributes.COUNT);
+  //
+  //      for(local i = 0; i != this.Const.Attributes.COUNT; i = ++i) {
+  //        this.m.Attributes[i] = [];
+  //      }
+  //    }
+  //
+  //    for(local i = 0; i != this.Const.Attributes.COUNT; i = ++i) {
+  //      for(local j = 0; j < _amount; j = ++j) {
+  //        if (_minOnly) {
+  //          this.m.Attributes[i].insert(0, 1);
+  //        }
+  //        else if (_maxOnly) {
+  //          this.m.Attributes[i].insert(0, this.Const.AttributesLevelUp[i].Max);
+  //        }
+  //        else {
+  //          this.m.Attributes[i].insert(0, this.Math.rand(
+  //            this.Const.AttributesLevelUp[i].Min + (this.m.Talents[i] == 3 ? 2 : this.m.Talents[i]) * this.Const.Ajfa.AttributeLevelUpTalentBonus[i],
+  //            this.Const.AttributesLevelUp[i].Max + (this.m.Talents[i] == 3 ? 1 : 0) * this.Const.Ajfa.AttributeLevelUpTalentBonus[i]));
+  //        }
+  //      }
+  //    }
+  //  };
+  //});
 };
 
 local nerfColossus = function() {
-  gt.Const.Ajfa.ColossusHitpointsMult <- 1.17;
+  gt.Const.Ajfa.ColossusHitpointsMult <- 1.20;
   gt.Const.Strings.PerkDescription.Colossus = "Bring it on! Hitpoints are increased by [color=" + this.Const.UI.Color.PositiveValue + "]" +
     this.Math.round((gt.Const.Ajfa.ColossusHitpointsMult - 1) * 100) + "%[/color], which also reduces the chance to sustain debilitating injuries when being hit.";
 
@@ -36,7 +68,6 @@ local nerfColossus = function() {
     };
 
     c.onUpdate = function(_properties) {
-      this.logInfo("Ajfa perk_colossus.onUpdate called.");
       _properties.HitpointsMult *= this.Const.Ajfa.ColossusHitpointsMult;
     }
   }, false, false);
@@ -56,7 +87,6 @@ local buffBullseye = function() {
     c = ::mods_getClassForOverride(c, "perk_bullseye");
     c.m.RangedAttackBlockedChanceMult <- this.Const.Ajfa.BullseyeRangedAttackBlockedChanceMult;
     c.onUpdate = function(_properties) {
-      this.logInfo("Ajfa perk_bullseye.onUpdate called.");
       _properties.RangedAttackBlockedChanceMult *= this.m.RangedAttackBlockedChanceMult;
     };
   }, false, false);
@@ -109,7 +139,6 @@ local buffThrowingWithoutMastery = function() {
       actorClass.onInitOriginalBuffThrowingWithoutMastery <- actorClass.onInit;
       actorClass.onInit = function() {
         this.onInitOriginalBuffThrowingWithoutMastery();
-        this.logInfo("Ajfa actor.onInit called. Adding ajfa_buff_throwing.");
         this.m.Skills.add(this.new("scripts/skills/special/ajfa_buff_throwing"));
       };
     }
@@ -127,7 +156,6 @@ local buffCripplingStrikes = function() {
   ::mods_hookClass("skills/perks/perk_crippling_strikes", function(c) {
     c = ::mods_getClassForOverride(c, "perk_crippling_strikes");
     c.onUpdate = function(_properties) {
-      this.logInfo("Ajfa perk_crippling_strikes.onUpdate called.");
       _properties.ThresholdToInflictInjuryMult *= this.Const.Ajfa.CripplingStrikesThresholdToInflictInjuryMult;
     };
   }, false, false);
@@ -137,10 +165,10 @@ local buffCripplingStrikes = function() {
 };
 
 local buffNineLives = function() {
-  gt.Const.Ajfa.NineLivesMeleeDefenseModifier <- 15;
-  gt.Const.Ajfa.NineLivesRangedDefenseModifier <- 15;
-  gt.Const.Ajfa.NineLivesBraveryModifier <- 15;
-  gt.Const.Ajfa.NineLivesInitiativeModifier <- 15;
+  gt.Const.Ajfa.NineLivesMeleeDefenseModifier <- 20;
+  gt.Const.Ajfa.NineLivesRangedDefenseModifier <- 20;
+  gt.Const.Ajfa.NineLivesBraveryModifier <- 20;
+  gt.Const.Ajfa.NineLivesInitiativeModifier <- 20;
   gt.Const.Ajfa.NineLivesEffectTurns <- 2;
 
   gt.Const.Strings.PerkDescription.NineLives =
@@ -195,7 +223,6 @@ local buffNineLives = function() {
    };
 
     c.onUpdate = function(_properties) {
-      this.logInfo("Ajfa nine_lives_effect.onUpdate called.");
       _properties.MeleeDefense += this.Const.Ajfa.NineLivesMeleeDefenseModifier;
       _properties.RangedDefense += this.Const.Ajfa.NineLivesRangedDefenseModifier;
       _properties.Bravery += this.Const.Ajfa.NineLivesBraveryModifier;
@@ -234,7 +261,6 @@ local buffCoupDeGrace = function() {
   ::mods_hookClass("skills/perks/perk_coup_de_grace", function(c) {
     c = ::mods_getClassForOverride(c, "perk_coup_de_grace");
     c.onAnySkillUsed = function(_skill, _targetEntity, _properties) {
-      this.logInfo("Ajfa coup_de_grace.onAnySkillUsed called.");
       if (_targetEntity == null) {
         return;
       }
@@ -253,13 +279,12 @@ local buffFootwork = function() {
   gt.Const.Ajfa.FootworkFatigueCostModifier <- -5;
 
   ::mods_hookNewObject("skills/actives/footwork", function(o) {
-    this.logInfo("mods_hookNewObject for Ajfa footwork called.");
     o.m.FatigueCost += this.Const.Ajfa.FootworkFatigueCostModifier;
   });
 };
 
 local buffFastAdaptation = function() {
-  gt.Const.Ajfa.FastAdaptationHitChanceBonusPerStack <- 11;
+  gt.Const.Ajfa.FastAdaptationHitChanceBonusPerStack <- 12;
 
   gt.Const.Strings.PerkDescription.FastAdaption =
     "Adapt to your opponent\'s moves! Gain an additional stacking [color=" + this.Const.UI.Color.PositiveValue + "]+" +
@@ -339,7 +364,6 @@ local nerfNimble = function() {
   ::mods_hookClass("skills/perks/perk_nimble", function(c) {
     c = ::mods_getClassForOverride(c, "perk_nimble");
     c.getChance = function() {
-      this.logInfo("Ajfa perk_nimble.getChance called.");
       local fat = 0;
       local body = this.getContainer().getActor().getItems().getItemAtSlot(this.Const.ItemSlot.Body);
       local head = this.getContainer().getActor().getItems().getItemAtSlot(this.Const.ItemSlot.Head);
@@ -508,6 +532,277 @@ local nerfPolearmMastery = function() {
   }, false, false);
 };
 
+local buffAnticipation = function() {
+  gt.Const.Ajfa.AnticipationRangedDefensePerTileFlatBonus <- 1;
+  gt.Const.Ajfa.AnticipationRangedDefensePerTileMultBonus <- 0.15;
+  gt.Const.Ajfa.AnticipationRangedDefenseMinBonus <- 10;
+  gt.Const.Strings.PerkDescription.Anticipation =
+    "When being attacked with ranged weapons, gain [color=" +
+    this.Const.UI.Color.PositiveValue + "]" + gt.Const.Ajfa.AnticipationRangedDefensePerTileFlatBonus +
+    " + " + this.Math.round(gt.Const.Ajfa.AnticipationRangedDefensePerTileMultBonus * 100) +
+    "%[/color] of your base Ranged Defense as additional Ranged Defense per tile that the attacker is away," +
+    " and always at least [color=" + this.Const.UI.Color.PositiveValue + "]+" +
+    gt.Const.Ajfa.AnticipationRangedDefenseMinBonus + "[/color] to Ranged Defense.";
+
+  local perkConsts = ::libreuse.findPerkConsts("perk.anticipation");
+  perkConsts.Tooltip = gt.Const.Strings.PerkDescription.Anticipation;
+
+  ::mods_hookClass("skills/perks/perk_anticipation", function(c) {
+    c = ::mods_getClassForOverride(c, "perk_anticipation");
+    c.onBeingAttacked = function(_attacker, _skill, _properties) {
+      this.logInfo("Ajfa perk_anticipation.onBeingAttacked called.");
+      local dist = _attacker.getTile().getDistanceTo(this.getContainer().getActor().getTile());
+      _properties.RangedDefense += this.Math.max(this.Const.Ajfa.AnticipationRangedDefenseMinBonus,
+      this.Math.floor(dist * (this.Const.Ajfa.AnticipationRangedDefensePerTileFlatBonus +
+      this.getContainer().getActor().getBaseProperties().getRangedDefense() *
+      this.Const.Ajfa.AnticipationRangedDefensePerTileMultBonus)));
+    };
+  }, false, false);
+};
+
+local nerfFortifiedMind = function() {
+  gt.Const.Ajfa.FortifiedMindBraveryMult <- 1.20;
+  gt.Const.Strings.PerkDescription.FortifiedMind =
+    "An iron will is not swayed from the true path easily." +
+    " Resolve is increased by [color=" + this.Const.UI.Color.PositiveValue + "]" +
+    this.Math.round((gt.Const.Ajfa.FortifiedMindBraveryMult - 1) * 100) + "%[/color].";
+
+  local perkConsts = ::libreuse.findPerkConsts("perk.fortified_mind");
+  perkConsts.Tooltip = gt.Const.Strings.PerkDescription.FortifiedMind;
+
+  ::mods_hookClass("skills/perks/perk_fortified_mind", function(c) {
+    c = ::mods_getClassForOverride(c, "perk_fortified_mind");
+    c.onUpdate = function(_properties) {
+      this.logInfo("Ajfa perk_fortified_mind.onUpdate called.");
+      _properties.BraveryMult *= this.Const.Ajfa.FortifiedMindBraveryMult;
+    };
+  }, false, false);
+};
+
+local nerfLoneWolf = function() {
+  gt.Const.Ajfa.LoneWolfMeleeSkillMult <- 1.15;
+  gt.Const.Ajfa.LoneWolfRangedSkillMult <- 1.15;
+  gt.Const.Ajfa.LoneWolfMeleeDefenseMult <- 1.15;
+  gt.Const.Ajfa.LoneWolRangedDefenseMult <- 1.15;
+  gt.Const.Ajfa.LoneWolfBraveryMult <- 1.10;
+  gt.Const.Strings.PerkDescription.LoneWolf =
+    "I work best alone. With no ally within 3 tiles of distance, gain a" +
+    " [color=" + this.Const.UI.Color.PositiveValue + "]" +
+    this.Math.round((gt.Const.Ajfa.LoneWolfMeleeSkillMult - 1) * 100) + "%[/color] bonus to Melee Skill," +
+    " [color=" + this.Const.UI.Color.PositiveValue + "]" +
+    this.Math.round((gt.Const.Ajfa.LoneWolfRangedSkillMult - 1) * 100) + "%[/color] bonus to Ranged Skill," +
+    " [color=" + this.Const.UI.Color.PositiveValue + "]" +
+    this.Math.round((gt.Const.Ajfa.LoneWolfMeleeDefenseMult - 1) * 100) + "%[/color] bonus to Melee Defense," +
+    " [color=" + this.Const.UI.Color.PositiveValue + "]" +
+    this.Math.round((gt.Const.Ajfa.LoneWolRangedDefenseMult - 1) * 100) + "%[/color] bonus to Ranged Defense and" +
+    " [color=" + this.Const.UI.Color.PositiveValue + "]" +
+    this.Math.round((gt.Const.Ajfa.LoneWolfBraveryMult - 1) * 100) + "%[/color] bonus to Resolve.";
+
+  local perkConsts = ::libreuse.findPerkConsts("perk.lone_wolf");
+  perkConsts.Tooltip = gt.Const.Strings.PerkDescription.LoneWolf;
+
+  ::mods_hookClass("skills/effects/lone_wolf_effect", function(c) {
+    c = ::mods_getClassForOverride(c, "lone_wolf_effect");
+    c.onUpdate = function(_properties) {
+      this.logInfo("Ajfa lone_wolf_effect.onUpdate called.");
+      if (!this.getContainer().getActor().isPlacedOnMap()) {
+        this.m.IsHidden = true;
+        return;
+      }
+
+      local actor = this.getContainer().getActor();
+      local myTile = actor.getTile();
+      local allies = this.Tactical.Entities.getInstancesOfFaction(actor.getFaction());
+      local isAlone = true;
+
+      foreach(ally in allies) {
+        if (ally.getID() == actor.getID() || !ally.isPlacedOnMap()) {
+          continue;
+        }
+
+        if (ally.getTile().getDistanceTo(myTile) <= 3) {
+            isAlone = false;
+          break;
+        }
+      }
+
+      if (isAlone) {
+        this.m.IsHidden = false;
+        _properties.MeleeSkillMult *= this.Const.Ajfa.LoneWolfMeleeSkillMult;
+        _properties.RangedSkillMult *= this.Const.Ajfa.LoneWolfRangedSkillMult;
+        _properties.MeleeDefenseMult *= this.Const.Ajfa.LoneWolfMeleeDefenseMult;
+        _properties.RangedDefenseMult *= this.Const.Ajfa.LoneWolRangedDefenseMult;
+        _properties.BraveryMult *= this.Const.Ajfa.LoneWolfBraveryMult;
+      }
+      else {
+        this.m.IsHidden = true;
+      }
+    };
+
+    c.getTooltip = function() {
+      return [
+        {
+            id = 1,
+            type = "title",
+            text = this.getName()
+        },
+        {
+          id = 2,
+          type = "description",
+          text = this.getDescription()
+        },
+        {
+          id = 10,
+          type = "text",
+          icon = "ui/icons/melee_skill.png",
+          text = "[color=" + this.Const.UI.Color.PositiveValue + "]+" +
+            this.Math.round((this.Const.Ajfa.LoneWolfMeleeSkillMult - 1) * 100) + "%[/color] Melee Skill"
+        },
+        {
+          id = 10,
+          type = "text",
+          icon = "ui/icons/ranged_skill.png",
+          text = "[color=" + this.Const.UI.Color.PositiveValue + "]+" +
+            this.Math.round((this.Const.Ajfa.LoneWolfRangedSkillMult - 1) * 100) + "%[/color] Ranged Skill"
+        },
+        {
+          id = 10,
+          type = "text",
+          icon = "ui/icons/melee_defense.png",
+          text = "[color=" + this.Const.UI.Color.PositiveValue + "]+" +
+            this.Math.round((this.Const.Ajfa.LoneWolfMeleeDefenseMult - 1) * 100) + "%[/color] Melee Defense"
+        },
+        {
+          id = 10,
+          type = "text",
+          icon = "ui/icons/ranged_defense.png",
+          text = "[color=" + this.Const.UI.Color.PositiveValue + "]+" +
+            this.Math.round((this.Const.Ajfa.LoneWolRangedDefenseMult - 1) * 100) + "%[/color] Ranged Defense"
+        },
+        {
+          id = 10,
+          type = "text",
+          icon = "ui/icons/bravery.png",
+          text = "[color=" + this.Const.UI.Color.PositiveValue + "]+" +
+            this.Math.round((this.Const.Ajfa.LoneWolfBraveryMult - 1) * 100) + "%[/color] Resolve"
+        }
+      ];
+    };
+  }, false, false);
+};
+
+local nerfBattleStandard = function() {
+  gt.Const.Ajfa.BattleStandardResolveMult <- 0.12;
+  gt.Const.Ajfa.BattleStandardResolveMultPerTileDistance <- -0.02;
+  gt.Const.Ajfa.BattleStandardMaxRange <- 5;
+
+  ::mods_hookClass("items/tools/player_banner", function(c) {
+    c = ::mods_getClassForOverride(c, "player_banner");
+    c.getTooltip = function() {
+      local result = this.weapon.getTooltip();
+      result.push({
+        id = 10,
+        type = "text",
+        icon = "ui/icons/special.png",
+        text = "Allies at a range of " + this.Const.Ajfa.BattleStandardMaxRange +
+          " tiles or less receive [color=" + this.Const.UI.Color.PositiveValue + "]" +
+          this.Math.round((gt.Const.Ajfa.BattleStandardResolveMult + gt.Const.Ajfa.BattleStandardResolveMultPerTileDistance) * 100) +
+          "%[/color] of the Resolve of the character holding this standard as a bonus," +
+          " up to a maximum of the standard bearer\'s Resolve." +
+          "With each tile distance from the standard bearer above 1," +
+          " the bonus is reduced by [color=" + this.Const.UI.Color.NegativeValue + "]" +
+          this.Math.round(-gt.Const.Ajfa.BattleStandardResolveMultPerTileDistance * 100) + "%[/color]." +
+          "The standard must be in the vision radius to receive the bonus."
+      });
+      return result;
+    };
+  }, false, false);
+
+  ::mods_hookClass("skills/effects/battle_standard_effect", function(c) {
+    c = ::mods_getClassForOverride(c, "battle_standard_effect");
+    c.getBonus = function(_properties) {
+      local actor = this.getContainer().getActor();
+      local maxDistance = this.Math.min(this.Const.Ajfa.BattleStandardMaxRange, actor.getCurrentProperties().getVision());
+
+      if (!actor.isPlacedOnMap() || ("State" in this.Tactical) && this.Tactical.State.isBattleEnded()) {
+        return 0;
+      }
+
+      local myTile = actor.getTile();
+      local allies = this.Tactical.Entities.getInstancesOfFaction(actor.getFaction());
+      local bestBraveryBonus = 0;
+
+      foreach(ally in allies) {
+        if (ally.getID() == actor.getID() || !ally.isPlacedOnMap()) {
+          continue;
+        }
+
+
+        local dist = ally.getTile().getDistanceTo(myTile);
+        if (dist > maxDistance) {
+          continue;
+        }
+
+        if (_properties.Bravery * _properties.BraveryMult >= ally.getBravery()) {
+          continue;
+        }
+
+        if (ally.getItems().getItemAtSlot(this.Const.ItemSlot.Mainhand) != null &&
+          ally.getItems().getItemAtSlot(this.Const.ItemSlot.Mainhand).getID() == "weapon.player_banner") {
+          local mult = this.Const.Ajfa.BattleStandardResolveMult +
+            dist * this.Const.Ajfa.BattleStandardResolveMultPerTileDistance;
+          local standardBearerBravery = ally.getBravery();
+          local braveryBonus = this.Math.min(standardBearerBravery * mult,
+            standardBearerBravery - _properties.Bravery * _properties.BraveryMult);
+          bestBraveryBonus = (braveryBonus > bestBraveryBonus ? braveryBonus : bestBraveryBonus);
+        }
+      }
+
+      return bestBraveryBonus;
+    };
+  }, false, false);
+};
+
+local buffReachAdvantage = function() {
+  gt.Const.Ajfa.ReachAdvantageMeleeDefenseBonusPerStack <- 6;
+    gt.Const.Strings.PerkDescription.ReachAdvantage =
+      "Learn to use the superior reach of large weapons to keep the enemy from getting close enough to land a good hit." +
+      "\n\nEach hit with a two-handed melee weapon adds a stack of Reach Advantage" +
+      " that increases your Melee Defense by [color=" + this.Const.UI.Color.PositiveValue + "]+" +
+      gt.Const.Ajfa.ReachAdvantageMeleeDefenseBonusPerStack + "[/color]," +
+      " up to a maximum of 5 stacks, until this character\'s next turn." +
+      " A single attack hitting multiple targets can add several stacks at once." +
+      "\n\nIf you put away your weapon, you lose all stacks.";
+
+  local perkConsts = ::libreuse.findPerkConsts("perk.reach_advantage");
+  perkConsts.Tooltip = gt.Const.Strings.PerkDescription.ReachAdvantage;
+
+  ::mods_hookClass("skills/perks/perk_reach_advantage", function(c) {
+    c = ::mods_getClassForOverride(c, "perk_reach_advantage");
+    c.getDescription = function() {
+      return "This character is using the superior reach of their melee weapon to keep opponents at bay," +
+        " increasing Melee Defense by [color=" + this.Const.UI.Color.PositiveValue + "]+" +
+        this.m.Stacks * this.Const.Ajfa.ReachAdvantageMeleeDefenseBonusPerStack +
+        "[/color] until their next turn.";
+    };
+
+    c.onUpdate = function(_properties) {
+      this.logInfo("Ajfa perk_reach_advantage.onUpdate called.");
+      this.m.IsHidden = this.m.Stacks == 0;
+      local weapon = this.getContainer().getActor().getItems().getItemAtSlot(this.Const.ItemSlot.Mainhand);
+
+      if (weapon != null && weapon.isItemType(this.Const.Items.ItemType.MeleeWeapon)
+        && weapon.isItemType(this.Const.Items.ItemType.TwoHanded)) {
+        _properties.MeleeDefense +=
+          this.m.Stacks * this.Const.Ajfa.ReachAdvantageMeleeDefenseBonusPerStack;
+      }
+      else {
+        this.m.Stacks = 0;
+      }
+    }
+  });
+}
+
 local rebalanceEnemiesStrength = function() {
   gt.Const.World.Spawn.Troops.SkeletonMedium.Strength -= 1;
   gt.Const.World.Spawn.Troops.SkeletonMedium.Cost -= 1;
@@ -618,6 +913,33 @@ local rebalanceEnemiesStrength = function() {
   gt.Const.World.Spawn.Troops.ZombieBoss.Cost -= 1;
 };
 
+local rebalancePlayerStrength = function() {
+  gt.Const.Ajfa.PlayerStrengthPerLevel <- 2.2;
+  ::mods_hookClass("entity/world/player_party", function(c) {
+    c = ::mods_getClassForOverride(c, "player_party");
+    c.updateStrength = function() {
+      this.m.Strength = 0.0;
+      local roster = this.World.getPlayerRoster().getAll();
+
+      if (roster.len() > this.World.Assets.getBrothersScaleMax()) {
+        roster.sort(this.onLevelCompare);
+      }
+
+      if (roster.len() < this.World.Assets.getBrothersScaleMin()) {
+        this.m.Strength += 10.0 * (this.World.Assets.getBrothersScaleMin() - roster.len());
+      }
+
+      foreach(i, bro in roster) {
+        if (i >= this.World.Assets.getBrothersScaleMax()) {
+          break;
+        }
+
+        this.m.Strength += 10.0 + (bro.getLevel() - 1) * this.Const.Ajfa.PlayerStrengthPerLevel;
+      }
+    }
+  }, false, false);
+};
+
 ::mods_queue("and_justice_for_all", "mod_hooks(>=20),libreuse(>=0.2)", function() {
   setupRootTableStructure();
 
@@ -630,15 +952,22 @@ local rebalanceEnemiesStrength = function() {
   buffBagsAndBelts();
   buffAdrenaline();
   buffCoupDeGrace();
+  nerfFortifiedMind();
   buffBullseye();
+  buffAnticipation();
   buffTaunt();
   nerfPolearmMastery();
   nerfThrowingMastery();
   buffThrowingWithoutMastery();
+  buffReachAdvantage();
+  //nerfLoneWolf();
   buffFootwork();
   buffHeadHunter();
   nerfNimble();
   nerfBattleForged();
 
+  nerfBattleStandard();
+
   rebalanceEnemiesStrength();
+  rebalancePlayerStrength();
 });
