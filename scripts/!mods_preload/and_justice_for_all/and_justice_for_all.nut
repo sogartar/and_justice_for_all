@@ -106,7 +106,6 @@ local nerfThrowingMastery = function() {
   ::mods_hookClass("skills/perks/perk_mastery_throwing", function(c) {
     c = ::mods_getClassForOverride(c, "perk_mastery_throwing");
     c.onAnySkillUsed = function(_skill, _targetEntity, _properties) {
-      this.logInfo("Ajfa perk_mastery_throwing.onAnySkillUsed called.");
       if (_targetEntity == null)
       {
         return;
@@ -294,7 +293,6 @@ local buffFastAdaptation = function() {
   ::mods_hookClass("skills/perks/perk_fast_adaption", function(c) {
     c = ::mods_getClassForOverride(c, "perk_fast_adaption");
     c.onAnySkillUsed = function(_skill, _targetEntity, _properties) {
-      this.logInfo("Ajfa perk_fast_adaption.onAnySkillUsed called.");
       if (this.m.Stacks != 0 && _skill.isAttack()) {
         _properties.MeleeSkill += this.Const.Ajfa.FastAdaptationHitChanceBonusPerStack * this.m.Stacks;
         _properties.RangedSkill += this.Const.Ajfa.FastAdaptationHitChanceBonusPerStack * this.m.Stacks;
@@ -329,10 +327,8 @@ local buffHeadHunter = function() {
     c = ::mods_getClassForOverride(c, "perk_head_hunter");
     c.onAnySkillUsedAjfaOriginal <- c.onAnySkillUsed;
     c.onAnySkillUsed = function(_skill, _targetEntity, _properties) {
-      this.logInfo("Ajfa perk_head_hunter.onAnySkillUsed called.");
       this.onAnySkillUsedAjfaOriginal(_skill, _targetEntity, _properties);
       if (_skill.isAttack() && this.m.Stacks != 0) {
-        this.logInfo("Increase head_hunter hit chance.");
         _properties.MeleeSkill += this.Const.Ajfa.HeadHunterHitChanceBonusWhenProked;
         _properties.RangedSkill += this.Const.Ajfa.HeadHunterHitChanceBonusWhenProked;
       }
@@ -402,7 +398,6 @@ local nerfBattleForged = function() {
   ::mods_hookClass("skills/perks/perk_battle_forged", function(c) {
     c = ::mods_getClassForOverride(c, "perk_battle_forged");
     c.onBeforeDamageReceived = function(_attacker, _skill, _hitInfo, _properties) {
-      this.logInfo("Ajfa perk_battle_forged.onBeforeDamageReceived called.");
       if (_attacker != null && _attacker.getID() == this.getContainer().getActor().getID() || _skill != null && !_skill.isAttack()) {
         return;
       }
@@ -534,7 +529,7 @@ local nerfPolearmMastery = function() {
 
 local buffAnticipation = function() {
   gt.Const.Ajfa.AnticipationRangedDefensePerTileFlatBonus <- 1;
-  gt.Const.Ajfa.AnticipationRangedDefensePerTileMultBonus <- 0.15;
+  gt.Const.Ajfa.AnticipationRangedDefensePerTileMultBonus <- 0.13;
   gt.Const.Ajfa.AnticipationRangedDefenseMinBonus <- 10;
   gt.Const.Strings.PerkDescription.Anticipation =
     "When being attacked with ranged weapons, gain [color=" +
@@ -550,7 +545,6 @@ local buffAnticipation = function() {
   ::mods_hookClass("skills/perks/perk_anticipation", function(c) {
     c = ::mods_getClassForOverride(c, "perk_anticipation");
     c.onBeingAttacked = function(_attacker, _skill, _properties) {
-      this.logInfo("Ajfa perk_anticipation.onBeingAttacked called.");
       local dist = _attacker.getTile().getDistanceTo(this.getContainer().getActor().getTile());
       _properties.RangedDefense += this.Math.max(this.Const.Ajfa.AnticipationRangedDefenseMinBonus,
       this.Math.floor(dist * (this.Const.Ajfa.AnticipationRangedDefensePerTileFlatBonus +
@@ -573,7 +567,6 @@ local nerfFortifiedMind = function() {
   ::mods_hookClass("skills/perks/perk_fortified_mind", function(c) {
     c = ::mods_getClassForOverride(c, "perk_fortified_mind");
     c.onUpdate = function(_properties) {
-      this.logInfo("Ajfa perk_fortified_mind.onUpdate called.");
       _properties.BraveryMult *= this.Const.Ajfa.FortifiedMindBraveryMult;
     };
   }, false, false);
@@ -604,7 +597,6 @@ local nerfLoneWolf = function() {
   ::mods_hookClass("skills/effects/lone_wolf_effect", function(c) {
     c = ::mods_getClassForOverride(c, "lone_wolf_effect");
     c.onUpdate = function(_properties) {
-      this.logInfo("Ajfa lone_wolf_effect.onUpdate called.");
       if (!this.getContainer().getActor().isPlacedOnMap()) {
         this.m.IsHidden = true;
         return;
@@ -787,7 +779,6 @@ local buffReachAdvantage = function() {
     };
 
     c.onUpdate = function(_properties) {
-      this.logInfo("Ajfa perk_reach_advantage.onUpdate called.");
       this.m.IsHidden = this.m.Stacks == 0;
       local weapon = this.getContainer().getActor().getItems().getItemAtSlot(this.Const.ItemSlot.Mainhand);
 
