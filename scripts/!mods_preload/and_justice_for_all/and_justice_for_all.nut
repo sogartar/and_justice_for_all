@@ -905,7 +905,7 @@ local rebalanceEnemiesStrength = function() {
 };
 
 local rebalancePlayerStrength = function() {
-  gt.Const.Ajfa.PlayerStrengthPerLevel <- 2.2;
+  gt.Const.Ajfa.PlayerStrengthPerLevel <- 2.1;
   ::mods_hookClass("entity/world/player_party", function(c) {
     c = ::mods_getClassForOverride(c, "player_party");
     c.updateStrength = function() {
@@ -943,8 +943,8 @@ local rebalancePlayerStrength = function() {
   buffBagsAndBelts();
   buffAdrenaline();
   buffCoupDeGrace();
-  nerfFortifiedMind();
   buffBullseye();
+  nerfFortifiedMind();
   buffAnticipation();
   buffTaunt();
   nerfPolearmMastery();
