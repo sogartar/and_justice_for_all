@@ -6,14 +6,15 @@ to make more build paths good and open more options for near-optimal play.
 ## Changes
 
 ### Attributes Leveling
-Hitpoints, maximum fatigue, resolve level up ranges has been increase from [2, 4]
-to [3, 5]. Initiative's range has been also increased by 1 to [4, 6].
-melee/ranged attack and melee defense dominates character development resulting
+
+Melee/Ranged attack and melee defense dominates character development resulting
 generally in the simple rules:  
 * 1 melee attack/defense > 2 hitpoints/max fatigue/resolve
 * 1 melee attack/defense > 3 initiative
 * 1 melee defense > 1 melee attack
 
+With this mod hitpoints, maximum fatigue, resolve level up ranges have been increase
+from [2, 4] to [3, 5]. Initiative's range has been also increased by 1 to [4, 6].
 With this change you will more often have to make the choice between +5 on a secondary
 attributes or +2 on a primary attribute.
 The +2 on a primary attribute will probably still majorise other leveups,
@@ -23,7 +24,7 @@ Overall, if leveling up one secondary attributes per level, your character will 
 
 It is worth noting, that attribute level-up values are generated when the player object is
 created. In old saves, characters that have been created already,
-either being hired or are available to hire would not benefit from the buff.
+either being hired or are available to hire, would not benefit from the buff.
 
 ### Player Banner
 
@@ -69,7 +70,7 @@ Necrosavants would be tougher to finish off now.
 * **Bags and Belts** - Buffed to decrease the maximum fatigue penalty of 2H weapons by 50%.
 With this buff caring 2 2H weapons in the bag would save around 7 maximum fatigue.
 * **Adrenaline** - Buffed to cost 18 fatigue instead of 20.  
-This perk is good especially early game, falls off later.
+This perk is good especially early game, but falls off later.
 In Blazing Deserts there are more character backgrounds with smaller fatigue pools
 and movement in the desert is really taxing on fatigue, so Adrenaline is less viable.
 * **Executioner** - Buffed the damage multiplier when attacking injured targets from 20% to 25%.  
