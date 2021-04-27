@@ -684,7 +684,7 @@ local nerfLoneWolf = function() {
 };
 
 local nerfBattleStandard = function() {
-  gt.Const.Ajfa.BattleStandardResolveMult <- 0.12;
+  gt.Const.Ajfa.BattleStandardResolveMult <- 0.14;
   gt.Const.Ajfa.BattleStandardResolveMultPerTileDistance <- -0.02;
   gt.Const.Ajfa.BattleStandardMaxRange <- 5;
 

@@ -28,11 +28,11 @@ either being hired or are available to hire, would not benefit from the buff.
 
 ### Player Banner
 
-The mechanic of the banner has been changed to give 10% of the resolve of the bearer
+The mechanic of the banner has been changed to give 11% of the resolve of the bearer
 to another character, if adjacent directly to him.
 The bonus falls off with each tile of distance by 2%.
 The maximum distance that  the bonus is active is at 5 tiles away.
-The bonus then is 2%. The standard also must be in the vision radius to receive the bonus.
+The bonus then is 4%. The standard also must be in the vision radius to receive the bonus.
 For example wearing -3 vision helmet at night would result in 2 vision radius
 making it much harder to get the bonus.  
 The wings would receive much lower bonus if the banner stays at the middle,
