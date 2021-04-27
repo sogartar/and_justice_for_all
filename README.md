@@ -85,9 +85,6 @@ Some enemies like Goblins would also benefit of the buff.
 Aside from Goblin City, Anticipation would be rarely justified to be picked up.
 Goblins Ambushers also have Anticipation and 20 ranged defense, so they are not
 much easier to fight if you have this perk.
-* **Fortified Mind** - Nerfed from 25% resolve bonus to 20%.  
-With the buffed leveling of attributes resolve could be more easily increased even
-with this and the banner nerf.
 * **Taunt** - Reduced the AP cost from 4 to 3.
 With this buff Taunt could be cast 3 times per turn in the clutch moments.
 Doing this multiple turns would be too taxing on fatigue.

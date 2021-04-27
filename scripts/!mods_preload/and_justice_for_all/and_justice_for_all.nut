@@ -944,7 +944,7 @@ local rebalancePlayerStrength = function() {
   buffAdrenaline();
   buffCoupDeGrace();
   buffBullseye();
-  nerfFortifiedMind();
+  //nerfFortifiedMind();
   buffAnticipation();
   buffTaunt();
   nerfPolearmMastery();
