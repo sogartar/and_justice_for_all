@@ -960,5 +960,5 @@ local rebalancePlayerStrength = function() {
   nerfBattleStandard();
 
   rebalanceEnemiesStrength();
-  rebalancePlayerStrength();
+  //rebalancePlayerStrength();
 });

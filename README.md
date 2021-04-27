@@ -124,11 +124,7 @@ The nerf to Nimble and Battle Forged is probably not significant enough to justi
 not picking any of them. I am afraid that nerfing them further would break the
 game, making it significantly harder to survive.
 
-### Entity and Party Strength
 NPC strength has been rebalanced to reflect the perk changes.  
-Player character strength calculation has been changed to reflect the bonus
-to secondary attributes per level. With each level the strength is increase by 2.1
-instead of 2.
 
 ### Feedback
 
