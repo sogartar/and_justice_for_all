@@ -28,7 +28,7 @@ either being hired or are available to hire, would not benefit from the buff.
 
 ### Player Banner
 
-The mechanic of the banner has been changed to give 11% of the resolve of the bearer
+The mechanic of the banner has been changed to give 12% of the resolve of the bearer
 to another character, if adjacent directly to him.
 The bonus falls off with each tile of distance by 2%.
 The maximum distance that  the bonus is active is at 5 tiles away.
