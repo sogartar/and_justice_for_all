@@ -18,7 +18,7 @@ from [2, 4] to [3, 5]. Initiative's range has been also increased by 1 to [4, 6]
 With this change you will more often have to make the choice between +5 on a secondary
 attributes or +2 on a primary attribute.
 The +2 on a primary attribute will probably still majorise other leveups,
-but at least you will fill bad for passing on a +5 :).  
+but at least you will feel bad for passing on a +5 :).
 Overall, if leveling up one secondary attributes per level, your character will get
 10 extra points in them.
 
