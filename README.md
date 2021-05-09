@@ -3,36 +3,74 @@
 This Battle Brothers mod is an attempt to rebalance the perks and attributes
 to make more build paths good and open more options for near-optimal play.
 
-## Changes
-
-### Attributes Leveling
+## Minmaxing
 
 Melee/Ranged attack and melee defense dominates character development resulting
 generally in the simple rules:  
-* 1 melee attack/defense > 2 hitpoints/max fatigue/resolve
-* 1 melee attack/defense > 3 initiative
-* 1 melee defense > 1 melee attack
+* 1 melee defense > 1 melee attack > 2 hitpoints/max fatigue/resolve
+* 1 melee attack > 3 initiative
 
-With this mod hitpoints, maximum fatigue, resolve level up ranges have been increase
-from [2, 4] to [3, 5]. Initiative's range has been also increased by 1 to [4, 6].
-With this change you will more often have to make the choice between +5 on a secondary
-attributes or +2 on a primary attribute.
-The +2 on a primary attribute will probably still majorise other leveups,
-but at least you will feel bad for passing on a +5 :).
-Overall, if leveling up one secondary attributes per level, your character will get
-10 extra points in them.
+### Melee Defense: The Elephant in the Room
+Defense scales too well. For example going from 10% to 5% chance to be hit
+effectively reduces in half the damage taken. On the other hand investing in it
+a little is not very good. This effect is already dampened with defense above 50
+being halfed, but it is not enough.
+
+Attack skill has the inverse property and has diminishing returns with respect
+to damage output. When hit chances are low additional skill is very beneficial.
+On the other hand he difference in damage output between 90% and 95% hit chance is small.
+It does reduce unpredictability though and killing the enemy fast is important.
+
+## Changes
+
+### Secondary Attributes Leveling
+
+With this mod hitpoints, maximum fatigue and resolve level up ranges have been increase
+from [2, 4] to [2, 6]. Initiative's range has been also increased to [3, 7].
+Talent stars on them give +2 on level ups, making them more important in a
+similar way to primary attribute talents.
+With this change you will more often have to make the choice between +6 on a secondary
+attribute or +2 on a primary attribute.
+The +2 on a primary attribute will maybe still majorise other level ups,
+but at least you will feel bad for passing on a +6 :).
 
 It is worth noting, that attribute level-up values are generated when the player object is
 created. In old saves, characters that have been created already,
 either being hired or are available to hire, would not benefit from the buff.
 
+### Defense
+Defense calculation is changed such that defense below 30 is increased
+and above 30 is decreased.
+
+![Defense Scaling](scaled-defense.png)
+
+With this change you gain more hit chance
+reduction when defense is low and less the higher it gets when compared
+to the vanilla formula.
+
+### Shieldwall
+The neighbor shieldwall bonus is buffed from +5 to +7.  
+With this change it is more beneficial to shieldwall on the entire front line
+instead of just on the flanks.
+
+### Shields
+Melee and ranged defense of all shields is increased by 1.
+With the nerfed scaling of defense shields needed some love and they
+are generally weaker compared to double gripping, usually useful only on
+dedicated tanks.
+
+### Two-handed Melee Weapons
+Reduced the min damage by 5% of the average damage of 2H melee weapons.  
+Generally 1H melee weapons are inferior to 2H weapons. This small nerf may make
+duelist and shield+1H more attractive.
+
 ### Player Banner
 
-The mechanic of the banner has been changed to give 12% of the resolve of the bearer
+The mechanic of the banner has been changed to give 10% of the resolve of the bearer
 to another character, if adjacent directly to him.
 The bonus falls off with each tile of distance by 2%.
 The maximum distance that  the bonus is active is at 5 tiles away.
-The bonus then is 4%. The standard also must be in the vision radius to receive the bonus.
+The bonus then is 2%. The standard also must be in the vision radius to receive the bonus.
 For example wearing -3 vision helmet at night would result in 2 vision radius
 making it much harder to get the bonus.  
 The wings would receive much lower bonus if the banner stays at the middle,
@@ -80,11 +118,13 @@ Some opponents like Barbarian Chosen and raiders would also benefit from the buf
 Sniper build are generally inferior since they have much reduced damage output.
 This perk change would buff them a bit.  
 Some enemies like Goblins would also benefit of the buff.
-* **Anticipation** - A small buff of per-tile ranaged defense bonus from 10% to
-13% of your ranged defense.  
+* **Gifted** - I wanted to nerf it considering also the max levelup to secondary
+attributes is higher, but I couldn't come up with an alternative.
+* **Anticipation** - Buff of per-tile ranaged defense bonus from 10% to
+15% of your ranged defense.  
 Aside from Goblin City, Anticipation would be rarely justified to be picked up.
-Goblins Ambushers also have Anticipation and 20 ranged defense, so they are not
-much easier to fight if you have this perk.
+Goblin Ambushers also have Anticipation and 20 ranged defense, so they are not
+much easier to fight with this buff if you have the perk also.
 * **Taunt** - Reduced the AP cost from 4 to 3.
 With this buff Taunt could be cast 3 times per turn in the clutch moments.
 Doing this multiple turns would be too taxing on fatigue.
@@ -106,7 +146,9 @@ Overall with the Bullseye buff leveling ranged defense is more important.
 * **Reach Advantage** - Buffed to give +6 melee defense per stack instead of +5.  
 Although, melee defense is very important, Reach Advantage looks inferior to Underdog,
 since it is much less consistent and is lost when switching weapons.
-Hopefully this buff does not force you to aways pick both.
+It is also applied before scaling down defense, while underdog is always a flat
+-5% chance to hit.
+Hopefully this buff does not force you to always pick both.
 * **Footwork** - Reduced the fatigue cost from 25 to 20.  
 This perk is way too taxing on fatigue for the utility it provides.
 * **Head Hunter** - Buffed to give also +5% to hit chance when the first hit proks.  
@@ -124,7 +166,12 @@ The nerf to Nimble and Battle Forged is probably not significant enough to justi
 not picking any of them. I am afraid that nerfing them further would break the
 game, making it significantly harder to survive.
 
+### Entity and Party Strength
 NPC strength has been rebalanced to reflect the perk changes.  
+Player character strength calculation has been changed to reflect the bonus
+to secondary attributes per level. With each level the strength is increase by 2.1
+instead of 2.
+
 
 ### Feedback
 
