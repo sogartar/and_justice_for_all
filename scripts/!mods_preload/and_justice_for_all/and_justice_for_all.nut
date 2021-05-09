@@ -1,4 +1,4 @@
-::mods_registerMod("and_justice_for_all", 0.2.0, "and_justice_for_all");
+::mods_registerMod("and_justice_for_all", 1.0.0, "and_justice_for_all");
 
 local gt = this.getroottable();
 
