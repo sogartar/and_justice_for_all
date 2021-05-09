@@ -181,4 +181,4 @@ I would be happy to get your feedback on how to improve the balance more.
 
 * [Battle Brothers](http://battlebrothersgame.com/) (=1.4.0.48)
 * [modhooks](https://www.nexusmods.com/battlebrothers/mods/42) (>=20)
-* [libreuse](https://github.com/sogartar/libreuse) (>=0.2)
+* [libreuse](https://github.com/sogartar/libreuse) (>=0.3)
