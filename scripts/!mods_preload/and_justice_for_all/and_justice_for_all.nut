@@ -111,8 +111,8 @@ local nerfGifted = function() {
 }
 
 local nerfThrowingMastery = function() {
-  gt.Const.Ajfa.ThrowingMasteryDamageMultAtDistance2 <- 1.217;
-  gt.Const.Ajfa.ThrowingMasteryDamageMultAtDistance3 <- 1.116;
+  gt.Const.Ajfa.ThrowingMasteryDamageMultAtDistance2 <- 1.13;
+  gt.Const.Ajfa.ThrowingMasteryDamageMultAtDistance3 <- 1.07;
   gt.Const.Strings.PerkDescription.SpecThrowing = "Master throwing weapons to wound or kill the enemy before they even get close. " +
     "Skills build up [color=" + this.Const.UI.Color.NegativeValue + "]25%[/color] less Fatigue." +
     "\n\nDamage is increased by [color=" + this.Const.UI.Color.PositiveValue + "]" + this.Math.round((gt.Const.Ajfa.ThrowingMasteryDamageMultAtDistance2 - 1) * 100) + "%[/color] when attacking at 2 tiles of distance." +

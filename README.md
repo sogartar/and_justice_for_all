@@ -136,9 +136,9 @@ even company builds where everyone has just Polearm Mastery quite good. This ner
 forces you to sacrifice some fatigue. The nerf is probably not strong enough,
 except for special attacks that are heavy on fatigue.
 For example Reap would cost 25 with mastery instead of 23.
-* **Throwing Mastery** - Nerfed to do 22% more damage at distance of 2 and 12% at distance of 3.
+* **Throwing Mastery** - Nerfed to do 13% more damage at distance of 2 and 7% at distance of 3.
 Now without mastery there is a 15% damage bonus at distance of 2 and 7.5% damage bonus at distance of 3.
-The total damage increase with mastery is again 40% and 20% at 2 and 3 tiles distance respectively.  
+The total damage increase with mastery is 30% and 15% at 2 and 3 tiles distance respectively.  
 I tried several times to do a skirmisher build, but it sucked.
 Due to this throwing damage without mastery from 2 and 3 tiles away is buffed.
 Now Goblin Skirmishers, Barbarian Reavers, etc. are stronger. As Reavers needed any buffs :).

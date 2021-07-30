@@ -1,7 +1,6 @@
 this.ajfa_buff_throwing <- this.inherit("scripts/skills/skill", {
   m = {
     DamageTotalMultPerDistance = [1.0, 1.0, 1.15, 1.075],
-    
   },
   function create() {
     this.m.ID = "special.ajfa.buff_throwing";
