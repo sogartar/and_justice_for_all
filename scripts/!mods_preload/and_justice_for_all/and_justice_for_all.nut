@@ -972,37 +972,50 @@ local buffShieldwall = function() {
 local buffShields = function() {
   gt.Const.Ajfa.MeleeDefenseAdd <- 1;
   gt.Const.Ajfa.RangedDefenseAdd <- 1;
+
   ::mods_hookClass("items/shields/shield", function(c) {
-    local shieldClass = ::mods_getClassForOverride(c, "shield");
-    shieldClass.m.IsAjfaBonusApplied <- false;
-    c.createAjfaOriginal <- c.create;
+    c.createAjfaOriginalShield <- c.create;
     c.create = function() {
-      this.createAjfaOriginal();
-      if (!this.m.IsAjfaBonusApplied) {
-        this.m.MeleeDefense += this.Const.Ajfa.MeleeDefenseAdd;
-        this.m.RangedDefense += this.Const.Ajfa.RangedDefenseAdd;
-        this.m.IsAjfaBonusApplied = true;
-      }
+      this.createAjfaOriginalShield();
+      this.m.MeleeDefense += this.Const.Ajfa.MeleeDefenseAdd;
+      this.m.RangedDefense += this.Const.Ajfa.RangedDefenseAdd;
+    };
+  }, true, true);
+
+  ::mods_hookClass("items/shields/named/named_shield", function(c) {
+    c.createAjfaOriginalNamedShield <- c.create;
+    c.create = function() {
+      this.createAjfaOriginalNamedShield();
+      this.m.MeleeDefense += this.Const.Ajfa.MeleeDefenseAdd;
+      this.m.RangedDefense += this.Const.Ajfa.RangedDefenseAdd;
     };
   }, true, true);
 };
 
+local nerf2HWeapon = function(o) {
+  if (!o.isItemType(this.Const.Items.ItemType.MeleeWeapon) ||
+    !o.isItemType(this.Const.Items.ItemType.TwoHanded)) {
+    return;
+  }
+  o.m.RegularDamage -= this.Math.round(this.Const.Ajfa.DamgeMinAvgMult * (o.m.RegularDamage + o.m.RegularDamageMax) / 2);
+};
+
 local nerf2HWeapons = function() {
   gt.Const.Ajfa.DamgeMinAvgMult <- 0.05;
+
   ::mods_hookClass("items/weapons/weapon", function(c) {
-    local weaponClass = ::mods_getClassForOverride(c, "weapon");
-    weaponClass.m.IsAjfaBonusApplied <- false;
-    c.createAjfaOriginal <- c.create;
+    c.createAjfaOriginalWeapon <- c.create;
     c.create = function() {
-      this.createAjfaOriginal();
-      if (!this.isItemType(this.Const.Items.ItemType.MeleeWeapon) ||
-        !this.isItemType(this.Const.Items.ItemType.TwoHanded)) {
-        return;
-      }
-      if (!this.m.IsAjfaBonusApplied) {
-        this.m.RegularDamage -= this.Math.round(this.Const.Ajfa.DamgeMinAvgMult * (this.m.RegularDamage + this.m.RegularDamageMax) / 2);
-        this.m.IsAjfaBonusApplied = true;
-      }
+      this.createAjfaOriginalWeapon();
+      nerf2HWeapon(this);
+    };
+  }, true, true);
+
+  ::mods_hookClass("items/weapons/named/named_weapon", function(c) {
+    c.createAjfaOriginalNamedWeapon <- c.create;
+    c.create = function() {
+      this.createAjfaOriginalNamedWeapon();
+      nerf2HWeapon(this);
     };
   }, true, true);
 };
