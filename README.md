@@ -118,8 +118,9 @@ Some opponents like Barbarian Chosen and raiders would also benefit from the buf
 Sniper build are generally inferior since they have much reduced damage output.
 This perk change would buff them a bit.  
 Some enemies like Goblins would also benefit of the buff.
-* **Gifted** - I wanted to nerf it considering also the max levelup to secondary
-attributes is higher, but I couldn't come up with an alternative.
+* **Gifted** - Instead of giving a level up with max values,
+it gives a normal level up with respecting talents.
+With this change it makes sense to risk picking gifted only when having good talents.
 * **Anticipation** - Buff of per-tile ranaged defense bonus from 10% to
 15% of your ranged defense.  
 Aside from Goblin City, Anticipation would be rarely justified to be picked up.
@@ -179,6 +180,6 @@ I would be happy to get your feedback on how to improve the balance more.
 
 ## Dependencies
 
-* [Battle Brothers](http://battlebrothersgame.com/) (=1.4.0.48)
+* [Battle Brothers](http://battlebrothersgame.com/) (>=1.4.0.48)
 * [modhooks](https://www.nexusmods.com/battlebrothers/mods/42) (>=20)
 * [libreuse](https://github.com/sogartar/libreuse) (>=0.3)
