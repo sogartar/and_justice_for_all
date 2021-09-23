@@ -313,6 +313,9 @@ local buffFastAdaptation = function() {
         _properties.RangedSkill += this.Const.Ajfa.FastAdaptationHitChanceBonusPerStack * this.m.Stacks;
       }
     };
+    c.getDescription = function() {
+      return "This character is adapting fast to their opponent\'s moves and gains an additional [color=" + this.Const.UI.Color.PositiveValue + "]+" + this.m.Stacks * this.Const.Ajfa.FastAdaptationHitChanceBonusPerStack + "%[/color] chance to hit with any attack.";
+    };
   }, false, false);
 
   local perkConsts = ::libreuse.findPerkConsts("perk.fast_adaption");
