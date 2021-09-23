@@ -1195,5 +1195,5 @@ local rebalancePlayerStrength = function() {
   nerf2HWeapons();
 
   rebalanceEnemiesStrength();
-  rebalancePlayerStrength();
+  //rebalancePlayerStrength();
 });
