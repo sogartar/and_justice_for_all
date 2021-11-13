@@ -119,7 +119,7 @@ Sniper build are generally inferior since they have much reduced damage output.
 This perk change would buff them a bit.  
 Some enemies like Goblins would also benefit of the buff.
 * **Gifted** - Instead of giving a level up with max values,
-it gives a normal level up with respecting talents.
+it gives a normal level up with talents.
 With this change it makes sense to risk picking gifted only when having good talents.
 * **Anticipation** - Buff of per-tile ranaged defense bonus from 10% to
 15% of your ranged defense.  
@@ -169,9 +169,6 @@ game, making it significantly harder to survive.
 
 ### Entity and Party Strength
 NPC strength has been rebalanced to reflect the perk changes.  
-Player character strength calculation has been changed to reflect the bonus
-to secondary attributes per level. With each level the strength is increase by 2.1
-instead of 2.
 
 
 ### Feedback
