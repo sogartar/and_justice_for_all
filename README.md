@@ -52,17 +52,31 @@ to the vanilla formula.
 The neighbor shieldwall bonus is buffed from +5 to +7.  
 With this change it is more beneficial to shieldwall on the entire front line
 instead of just on the flanks.
+Using shield breaking is more useful in the center of the line to weaken also neighbouring shieldwalls.
 
 ### Shields
-Melee and ranged defense of all shields is increased by 1.
+Melee and ranged defense of all shields is increased by 1.  
 With the nerfed scaling of defense shields needed some love and they
 are generally weaker compared to double gripping, usually useful only on
 dedicated tanks.
 
 ### Two-handed Melee Weapons
-Reduced the min damage by 5% of the average damage of 2H melee weapons.  
-Generally 1H melee weapons are inferior to 2H weapons. This small nerf may make
+* Reduced damage by 5%.
+* Reduced hit chance with 2%.
+* Reduce damage by an additional 5% for 2H hammers and maces that have range of 1.
+
+### One-handed Melee Weapons
+* Increased armor ignoring damage with 5%.
+* Reduced damage by 5%.
+
+Generally 1H melee weapons are inferior to 2H weapons. This rebalancing may make
 duelist and shield+1H more attractive.
+
+### Ranged Weapons
+Decrease Handognne damage by 10%.
+
+### Beasts
+Decrease damage by 5%.
 
 ### Player Banner
 
@@ -80,6 +94,7 @@ effect by foregoing another part of the battlefield.
 
 ### Perks
 
+### Tier 1
 * **Fast Adaptation** - Buffed from 10% hit chance per stack to 12%. This perk
 is usually picked on fodder bros and late game bros would generally get
 little from this perk. Maybe 3% hit chance increase on average. This Buff makes
@@ -111,6 +126,8 @@ With this buff caring 2 2H weapons in the bag would save around 7 maximum fatigu
 This perk is good especially early game, but falls off later.
 In Blazing Deserts there are more character backgrounds with smaller fatigue pools
 and movement in the desert is really taxing on fatigue, so Adrenaline is less viable.
+
+#### Tier 2
 * **Executioner** - Buffed the damage multiplier when attacking injured targets from 20% to 25%.  
 Although, not as bad as Crippling Strikes, Executioner is rarely justified picking up.
 Some opponents like Barbarian Chosen and raiders would also benefit from the buff.
@@ -118,17 +135,19 @@ Some opponents like Barbarian Chosen and raiders would also benefit from the buf
 Sniper build are generally inferior since they have much reduced damage output.
 This perk change would buff them a bit.  
 Some enemies like Goblins would also benefit of the buff.
-* **Gifted** - Instead of giving a level up with max values,
-it gives a normal level up with talents.
 With this change it makes sense to risk picking gifted only when having good talents.
+#### Tier 3
+* **Backstabber** - Buff hit chance bonus from 5% to 6% per surrounding allay.
 * **Anticipation** - Buff of per-tile ranaged defense bonus from 10% to
 15% of your ranged defense.  
 Aside from Goblin City, Anticipation would be rarely justified to be picked up.
 Goblin Ambushers also have Anticipation and 20 ranged defense, so they are not
 much easier to fight with this buff if you have the perk also.
+* **Rotation** - Reduced the fatigue cost from 25 to 20.
 * **Taunt** - Reduced the AP cost from 4 to 3.
 With this buff Taunt could be cast 3 times per turn in the clutch moments.
 Doing this multiple turns would be too taxing on fatigue.
+#### Tier 4
 * **Polearm Mastery** - Nerfed the fatigue reduction from 25% to 16%.  
 With this change doing a basic attack with a polearm and the mastery costs 13
 fatigue instead of 12.  
@@ -144,14 +163,16 @@ I tried several times to do a skirmisher build, but it sucked.
 Due to this throwing damage without mastery from 2 and 3 tiles away is buffed.
 Now Goblin Skirmishers, Barbarian Reavers, etc. are stronger. As Reavers needed any buffs :).
 Overall with the Bullseye buff leveling ranged defense is more important.
+#### Tier 5
 * **Reach Advantage** - Buffed to give +6 melee defense per stack instead of +5.  
 Although, melee defense is very important, Reach Advantage looks inferior to Underdog,
 since it is much less consistent and is lost when switching weapons.
 It is also applied before scaling down defense, while underdog is always a flat
 -5% chance to hit.
 Hopefully this buff does not force you to always pick both.
-* **Footwork** - Reduced the fatigue cost from 25 to 20.  
+* **Footwork** - Reduced the fatigue cost from 25 to 18.  
 This perk is way too taxing on fatigue for the utility it provides.
+#### Tier 6
 * **Head Hunter** - Buffed to give also +5% to hit chance when the first hit proks.  
 This change makes it easier to land the guaranteed second hit on the head.  
 Necrosavants would be even more scary :).
@@ -161,14 +182,19 @@ total armor. Reduced from 5%.
 Nimble or Battle Forged are always picked and are must-have perks that dominate
 any character build. They are the most powerful perks in the game. Maybe aside
 from Berserk. Berserk is much harder to balance though, because of its mechanics.
-It will be much weaker on 1-heanders if it provided only 3 AP on a kill,
+It will be much weaker on one-heanders if it provided only 3 AP on a kill,
 crippling the whole class. Therefore, Berserk is the yardstick for late-game perks.
 The nerf to Nimble and Battle Forged is probably not significant enough to justify
 not picking any of them. I am afraid that nerfing them further would break the
 game, making it significantly harder to survive.
+#### Tier 7
+* **Duelist** - Reduce armor ignoring damage from 25% to 20%.  
+With the buff to 1H weapons and with Duelist the armor ignoring damage is the same.
 
 ### Entity and Party Strength
 NPC strength has been rebalanced to reflect the perk changes.  
+Because of the nerf to Battle Forged and Nimble the scaling strength per level
+for player characters has been reduced for 2 to 1.9.
 
 
 ### Feedback

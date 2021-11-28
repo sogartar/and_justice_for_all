@@ -2,10 +2,6 @@
 
 local gt = this.getroottable();
 
-if (!("ajfa" in gt)) {
-  ::ajfa <- {};
-}
-
 local setupRootTableStructure = function() {
   gt.Ajfa <- {};
   gt.Const.Ajfa <- {};
@@ -289,11 +285,19 @@ local buffCoupDeGrace = function() {
   perkConsts.Tooltip = gt.Const.Strings.PerkDescription.CoupDeGrace;
 };
 
+local buffRotation = function() {
+  gt.Const.Ajfa.RotationFatigueCost <- 20;
+
+  ::mods_hookNewObject("skills/actives/rotation", function(o) {
+    o.m.FatigueCost = this.Const.Ajfa.RotationFatigueCost;
+  });
+};
+
 local buffFootwork = function() {
-  gt.Const.Ajfa.FootworkFatigueCostModifier <- -5;
+  gt.Const.Ajfa.FootworkFatigueCost <- 18;
 
   ::mods_hookNewObject("skills/actives/footwork", function(o) {
-    o.m.FatigueCost += this.Const.Ajfa.FootworkFatigueCostModifier;
+    o.m.FatigueCost = this.Const.Ajfa.FootworkFatigueCost;
   });
 };
 
@@ -323,10 +327,10 @@ local buffFastAdaptation = function() {
 };
 
 local buffAdrenaline = function() {
-  gt.Const.Ajfa.AdrenalineFatigueCostModifier <- -2;
+  gt.Const.Ajfa.AdrenalineFatigueCost <- 18;
 
   ::mods_hookNewObject("skills/actives/adrenaline_skill", function(o) {
-    o.m.FatigueCost += this.Const.Ajfa.AdrenalineFatigueCostModifier;
+    o.m.FatigueCost = this.Const.Ajfa.AdrenalineFatigueCost;
   });
 };
 
@@ -459,6 +463,32 @@ local nerfBattleForged = function() {
   }, false, false);
 };
 
+local nerfDuelist = function() {
+  gt.Const.Ajfa.DuelistDamageDirectAdd <- 0.2;
+  gt.Const.Strings.PerkDescription.Duelist =
+    "Become one with your weapon and go for the weak spots!" +
+    " With the offhand free or carrying a throwable tool (e.g. throwing net)," +
+    " an additional [color=" + this.Const.UI.Color.PositiveValue + "]+" +
+    this.Math.round(gt.Const.Ajfa.DuelistDamageDirectAdd * 100) +
+    "%[/color] of any damage ignores armor. Does not work with two-handed weapons.";
+
+  local perkConsts = ::libreuse.findPerkConsts("perk.duelist");
+  perkConsts.Tooltip = gt.Const.Strings.PerkDescription.Duelist;
+
+  ::mods_hookClass("skills/perks/perk_duelist", function(c) {
+    c = ::mods_getClassForOverride(c, "perk_duelist");
+    c.onUpdate =  function( _properties ) {
+      local items = this.getContainer().getActor().getItems();
+      local off = items.getItemAtSlot(this.Const.ItemSlot.Offhand);
+
+      if (off == null && !items.hasBlockedSlot(this.Const.ItemSlot.Offhand) ||
+        off != null && off.isItemType(this.Const.Items.ItemType.Tool)) {
+        _properties.DamageDirectAdd += this.Const.Ajfa.DuelistDamageDirectAdd;
+      }
+    };
+  }, false, false);
+};
+
 local buffTaunt = function() {
   gt.Const.Ajfa.TauntActionPointsCost <- 3;
 
@@ -547,6 +577,26 @@ local nerfPolearmMastery = function() {
       } else {
         onAfterUpdateNew(_properties);
       }
+    };
+  }, false, false);
+};
+
+local buffBackstabber = function() {
+  gt.Const.Ajfa.BackstabberSurroundedBonus <- 11;
+  gt.Const.Strings.PerkDescription.Backstabber =
+    "Honor doesn\'t win you fights, stabbing the enemy where it hurts does."+
+    " The bonus to hitchance in melee is increased to [color=" +
+    this.Const.UI.Color.PositiveValue + "]+" +
+    gt.Const.Ajfa.BackstabberSurroundedBonus +
+    "%[/color] for each ally surrounding and distracting your target.";
+
+  local perkConsts = ::libreuse.findPerkConsts("perk.backstabber");
+  perkConsts.Tooltip = gt.Const.Strings.PerkDescription.Backstabber;
+
+  ::mods_hookClass("skills/perks/perk_backstabber", function(c) {
+    c = ::mods_getClassForOverride(c, "perk_backstabber");
+    c.onUpdate = function( _properties) {
+      _properties.SurroundedBonus = this.Const.Ajfa.BackstabberSurroundedBonus;
     };
   }, false, false);
 };
@@ -977,18 +1027,20 @@ local buffShields = function() {
   gt.Const.Ajfa.RangedDefenseAdd <- 1;
 
   ::mods_hookClass("items/shields/shield", function(c) {
-    c.createAjfaOriginalShield <- c.create;
+    local create = c.create;
     c.create = function() {
-      this.createAjfaOriginalShield();
-      this.m.MeleeDefense += this.Const.Ajfa.MeleeDefenseAdd;
-      this.m.RangedDefense += this.Const.Ajfa.RangedDefenseAdd;
+      create();
+      if (::libreuse.getParentClass(this, "named_shield") == null) {
+        this.m.MeleeDefense += this.Const.Ajfa.MeleeDefenseAdd;
+        this.m.RangedDefense += this.Const.Ajfa.RangedDefenseAdd;
+      }
     };
   }, true, true);
 
   ::mods_hookClass("items/shields/named/named_shield", function(c) {
-    c.createAjfaOriginalNamedShield <- c.create;
+    local create = c.create;
     c.create = function() {
-      this.createAjfaOriginalNamedShield();
+      create();
       this.m.MeleeDefense += this.Const.Ajfa.MeleeDefenseAdd;
       this.m.RangedDefense += this.Const.Ajfa.RangedDefenseAdd;
     };
@@ -1000,25 +1052,162 @@ local nerf2HWeapon = function(o) {
     !o.isItemType(this.Const.Items.ItemType.TwoHanded)) {
     return;
   }
-  o.m.RegularDamage -= this.Math.round(this.Const.Ajfa.DamgeMinAvgMult * (o.m.RegularDamage + o.m.RegularDamageMax) / 2);
+
+  o.m.RegularDamage = this.Math.round(this.Const.Ajfa.DamgeAvgMult2H * o.m.RegularDamage);
+  o.m.RegularDamageMax = this.Math.round(this.Const.Ajfa.DamgeAvgMult2H * o.m.RegularDamageMax);
+  o.m.AdditionalAccuracy += this.Const.Ajfa.AdditionalAccuracy2H;
+};
+
+local bigNerf2HWeapon = function(o) {
+  if (!o.isItemType(this.Const.Items.ItemType.MeleeWeapon) ||
+    !o.isItemType(this.Const.Items.ItemType.TwoHanded)) {
+    return;
+  }
+
+  o.m.RegularDamage = this.Math.round(this.Const.Ajfa.DamgeAvgMultStrong2H * o.m.RegularDamage);
+  o.m.RegularDamageMax = this.Math.round(this.Const.Ajfa.DamgeAvgMultStrong2H * o.m.RegularDamageMax);
+  o.m.AdditionalAccuracy += this.Const.Ajfa.AdditionalAccuracy2H;
 };
 
 local nerf2HWeapons = function() {
-  gt.Const.Ajfa.DamgeMinAvgMult <- 0.05;
+  gt.Const.Ajfa.DamgeAvgMult2H <- 0.95;
+  gt.Const.Ajfa.DamgeAvgMultStrong2H <- 0.9;
+  gt.Const.Ajfa.AdditionalAccuracy2H <- -2;
+
+  local weaponIdFuncMap = {};
+  weaponIdFuncMap["weapon.greataxe"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.heavy_rusty_axe"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.two_handed_wooden_hammer"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.skull_hammer"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.two_handed_flanged_mace"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.two_handed_hammer"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.two_handed_mace"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.two_handed_spiked_mace"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.named_greataxe"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.named_heavy_rusty_axe"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.named_skullhammer"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.named_two_handed_hammer"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.named_two_handed_mace"] <- bigNerf2HWeapon;
+  weaponIdFuncMap["weapon.named_two_handed_spiked_mace"] <- bigNerf2HWeapon;
 
   ::mods_hookClass("items/weapons/weapon", function(c) {
-    c.createAjfaOriginalWeapon <- c.create;
+    local create = c.create;
     c.create = function() {
-      this.createAjfaOriginalWeapon();
-      nerf2HWeapon(this);
+      create();
+      if (::libreuse.getParentClass(this, "named_weapon") == null) {
+        if (this.getID() in weaponIdFuncMap) {
+          weaponIdFuncMap[this.getID()](this);
+        } else {
+          nerf2HWeapon(this);
+        }
+      }
     };
   }, true, true);
 
   ::mods_hookClass("items/weapons/named/named_weapon", function(c) {
-    c.createAjfaOriginalNamedWeapon <- c.create;
+    local create = c.create;
     c.create = function() {
-      this.createAjfaOriginalNamedWeapon();
-      nerf2HWeapon(this);
+      create();
+      if (this.getID() in weaponIdFuncMap) {
+        weaponIdFuncMap[this.getID()](this);
+      } else {
+        nerf2HWeapon(this);
+      }
+    };
+  }, true, true);
+};
+
+local rebalance1HWeapon = function(o) {
+  if (!o.isItemType(this.Const.Items.ItemType.MeleeWeapon) ||
+    !o.isItemType(this.Const.Items.ItemType.OneHanded)) {
+    return;
+  }
+  o.m.RegularDamage = this.Math.round(this.Const.Ajfa.DamgeAvgMult1H * o.m.RegularDamage);
+  o.m.RegularDamageMax = this.Math.round(this.Const.Ajfa.DamgeAvgMult1H * o.m.RegularDamageMax);
+  //o.m.AdditionalAccuracy += this.Const.Ajfa.AdditionalAccuracy1H;
+  o.m.DirectDamageAdd += this.Const.Ajfa.DirectDamageAdd1H;
+};
+
+local rebalance1HWeapons = function() {
+  gt.Const.Ajfa.DamgeAvgMult1H <- 0.95;
+  //gt.Const.Ajfa.AdditionalAccuracy1H <- 3;
+  gt.Const.Ajfa.DirectDamageAdd1H <- 0.05;
+
+  ::mods_hookClass("items/weapons/weapon", function(c) {
+    local create = c.create;
+    c.create = function() {
+      create()
+      if (::libreuse.getParentClass(this, "named_weapon") == null) {
+        rebalance1HWeapon(this);
+      }
+    };
+  }, true, true);
+
+  ::mods_hookClass("items/weapons/named/named_weapon", function(c) {
+    local create = c.create;
+    c.create = function() {
+      create();
+      rebalance1HWeapon(this);
+    };
+  }, true, true);
+};
+
+local rebalanceRangedWeapon = function(o) {
+  if (!o.isItemType(this.Const.Items.ItemType.RangedWeapon)) {
+    return;
+  }
+
+  if (o.getID() == "weapon.handgonne") {
+      o.m.RegularDamage = this.Math.round(this.Const.Ajfa.HandgonneDamageAvgMult * o.m.RegularDamage);
+      o.m.RegularDamageMax = this.Math.round(this.Const.Ajfa.HandgonneDamageAvgMult * o.m.RegularDamageMax);
+  } else {
+    o.m.RegularDamage = this.Math.round(this.Const.Ajfa.DamgeAvgMultRangedWeapon * o.m.RegularDamage);
+    o.m.RegularDamageMax = this.Math.round(this.Const.Ajfa.DamgeAvgMultRangedWeapon * o.m.RegularDamageMax);
+  }
+};
+
+local rebalanceRangedWeapons = function() {
+  gt.Const.Ajfa.DamgeAvgMultRangedWeapon <- 1.0;
+  gt.Const.Ajfa.HandgonneDamageAvgMult <- 0.9;
+
+  ::mods_hookClass("items/weapons/weapon", function(c) {
+    local create = c.create;
+    c.create = function() {
+      create();
+      if (::libreuse.getParentClass(this, "named_weapon") == null) {
+        rebalanceRangedWeapon(this);
+      }
+    };
+  }, true, true);
+
+  ::mods_hookClass("items/weapons/named/named_weapon", function(c) {
+    local create = c.create;
+    c.create = function() {
+      create();
+      rebalanceRangedWeapon(this);
+    };
+  }, true, true);
+};
+
+local fixNamedWeaponDeserialization = function() {
+  ::mods_hookClass("items/weapons/named/named_weapon", function(c) {
+    local named_weapon_class = ::mods_getClassForOverride(c, "named_weapon");
+    named_weapon_class.onDeserialize = function(_in) {
+      this.m.Name = _in.readString();
+      this.m.ConditionMax = _in.readF32();
+      this.m.StaminaModifier = _in.readI8();
+      this.m.RegularDamage = _in.readU16();
+      this.m.RegularDamageMax = _in.readU16();
+      this.m.ArmorDamageMult = _in.readF32();
+      this.m.ChanceToHitHead = _in.readU8();
+      this.m.ShieldDamage = _in.readU16();
+      this.m.AdditionalAccuracy = _in.readI16(); // Was unsigned
+      this.m.DirectDamageAdd = _in.readF32();
+      this.m.FatigueOnSkillUse = _in.readI16();
+      this.m.AmmoMax = _in.readU16();
+      _in.readF32();
+      this.weapon.onDeserialize(_in);
+      this.updateVariant();
     };
   }, true, true);
 };
@@ -1038,40 +1227,52 @@ local rebalanceEnemiesStrength = function() {
   gt.Const.World.Spawn.Troops.Vampire.Cost += 3;
   gt.Const.World.Spawn.Troops.VampireLOW.Strength += 3;
   gt.Const.World.Spawn.Troops.VampireLOW.Cost += 3;
+  gt.Const.World.Spawn.Troops.Direwolf.Strength += 1;
+  gt.Const.World.Spawn.Troops.Direwolf.Cost += 1;
   gt.Const.World.Spawn.Troops.DirewolfHIGH.Strength += 1;
   gt.Const.World.Spawn.Troops.DirewolfHIGH.Cost += 1;
   gt.Const.World.Spawn.Troops.DirewolfBodyguard.Strength += 1;
   gt.Const.World.Spawn.Troops.DirewolfBodyguard.Cost += 1;
-  gt.Const.World.Spawn.Troops.Hyena.Strength += 1;
-  gt.Const.World.Spawn.Troops.Hyena.Cost += 1;
-  gt.Const.World.Spawn.Troops.HyenaHIGH.Strength += 2;
-  gt.Const.World.Spawn.Troops.HyenaHIGH.Cost += 2;
-  gt.Const.World.Spawn.Troops.SandGolem.Strength += 1;
-  gt.Const.World.Spawn.Troops.SandGolem.Cost += 1;
-  gt.Const.World.Spawn.Troops.SandGolemMEDIUM.Strength += 2;
-  gt.Const.World.Spawn.Troops.SandGolemMEDIUM.Cost += 2;
-  gt.Const.World.Spawn.Troops.SandGolemHIGH.Strength += 3;
-  gt.Const.World.Spawn.Troops.SandGolemHIGH.Cost += 3;
-  gt.Const.World.Spawn.Troops.Schrat.Strength += 2;
-  gt.Const.World.Spawn.Troops.Schrat.Cost += 2;
-  gt.Const.World.Spawn.Troops.Serpent.Strength += 2;
-  gt.Const.World.Spawn.Troops.Serpent.Cost += 2;
-  gt.Const.World.Spawn.Troops.BarbarianUnhold.Strength += 2;
-  gt.Const.World.Spawn.Troops.BarbarianUnhold.Cost += 2;
-  gt.Const.World.Spawn.Troops.BarbarianUnholdFrost.Strength += 3;
-  gt.Const.World.Spawn.Troops.BarbarianUnholdFrost.Cost += 3;
+  //gt.Const.World.Spawn.Troops.Ghoul.Strength += 1;
+  //gt.Const.World.Spawn.Troops.Ghoul.Cost += 1;
+  gt.Const.World.Spawn.Troops.GhoulHIGH.Strength += 1;
+  gt.Const.World.Spawn.Troops.GhoulHIGH.Cost += 1;
+  gt.Const.World.Spawn.Troops.Lindwurm.Strength += 4;
+  gt.Const.World.Spawn.Troops.Lindwurm.Cost += 4;
   gt.Const.World.Spawn.Troops.Unhold.Strength += 2;
   gt.Const.World.Spawn.Troops.Unhold.Cost += 2;
   gt.Const.World.Spawn.Troops.UnholdFrost.Strength += 3;
   gt.Const.World.Spawn.Troops.UnholdFrost.Cost += 3;
   gt.Const.World.Spawn.Troops.UnholdBog.Strength += 2;
   gt.Const.World.Spawn.Troops.UnholdBog.Cost += 2;
+  gt.Const.World.Spawn.Troops.Spider.Strength += 1;
+  gt.Const.World.Spawn.Troops.Spider.Cost += 1;
+  gt.Const.World.Spawn.Troops.Schrat.Strength += 3;
+  gt.Const.World.Spawn.Troops.Schrat.Cost += 3;
+  gt.Const.World.Spawn.Troops.Serpent.Strength += 4;
+  gt.Const.World.Spawn.Troops.Serpent.Cost += 4;
+  gt.Const.World.Spawn.Troops.Hyena.Strength += 2;
+  gt.Const.World.Spawn.Troops.Hyena.Cost += 2;
+  gt.Const.World.Spawn.Troops.HyenaHIGH.Strength += 3;
+  gt.Const.World.Spawn.Troops.HyenaHIGH.Cost += 3;
+  //gt.Const.World.Spawn.Troops.SandGolem.Strength += 1;
+  //gt.Const.World.Spawn.Troops.SandGolem.Cost += 1;
+  gt.Const.World.Spawn.Troops.SandGolemMEDIUM.Strength += 1;
+  gt.Const.World.Spawn.Troops.SandGolemMEDIUM.Cost += 1;
+  gt.Const.World.Spawn.Troops.SandGolemHIGH.Strength += 3;
+  gt.Const.World.Spawn.Troops.SandGolemHIGH.Cost += 3;
+  gt.Const.World.Spawn.Troops.BarbarianUnhold.Strength += 2;
+  gt.Const.World.Spawn.Troops.BarbarianUnhold.Cost += 2;
+  gt.Const.World.Spawn.Troops.BarbarianUnholdFrost.Strength += 3;
+  gt.Const.World.Spawn.Troops.BarbarianUnholdFrost.Cost += 3;
   gt.Const.World.Spawn.Troops.GoblinSkirmisher.Strength += 1;
   gt.Const.World.Spawn.Troops.GoblinSkirmisher.Cost += 1;
   gt.Const.World.Spawn.Troops.GoblinAmbusher.Strength += 1;
   gt.Const.World.Spawn.Troops.GoblinAmbusher.Cost += 1;
   gt.Const.World.Spawn.Troops.GoblinOverseer.Strength += 1;
   gt.Const.World.Spawn.Troops.GoblinOverseer.Cost += 1;
+  gt.Const.World.Spawn.Troops.GoblinWolfrider.Strength += 1;
+  gt.Const.World.Spawn.Troops.GoblinWolfrider.Cost += 1;
   gt.Const.World.Spawn.Troops.BanditRaider.Strength += 1;
   gt.Const.World.Spawn.Troops.BanditRaider.Cost += 1;
   gt.Const.World.Spawn.Troops.BanditRaiderLOW.Strength += 1;
@@ -1080,18 +1281,24 @@ local rebalanceEnemiesStrength = function() {
   gt.Const.World.Spawn.Troops.BanditRaiderWolf.Cost += 1;
   gt.Const.World.Spawn.Troops.BanditLeader.Strength += 2;
   gt.Const.World.Spawn.Troops.BanditLeader.Cost += 2;
+  gt.Const.World.Spawn.Troops.NomadCutthroat.Strength += 1;
+  gt.Const.World.Spawn.Troops.NomadCutthroat.Cost += 1;
+  gt.Const.World.Spawn.Troops.NomadOutlaw.Strength += 1;
+  gt.Const.World.Spawn.Troops.NomadOutlaw.Cost += 1;
   gt.Const.World.Spawn.Troops.NomadLeader.Strength += 2;
   gt.Const.World.Spawn.Troops.NomadLeader.Cost += 2;
-  gt.Const.World.Spawn.Troops.DesertDevil.Strength += 1;
-  gt.Const.World.Spawn.Troops.DesertDevil.Cost += 1;
-  gt.Const.World.Spawn.Troops.Executioner.Strength += 1;
-  gt.Const.World.Spawn.Troops.Executioner.Cost += 1;
-  gt.Const.World.Spawn.Troops.DesertStalker.Strength += 3;
-  gt.Const.World.Spawn.Troops.DesertStalker.Cost += 3;
+  //gt.Const.World.Spawn.Troops.Assassin.Strength += 0;
+  //gt.Const.World.Spawn.Troops.Assassin.Cost += 0;
+  gt.Const.World.Spawn.Troops.DesertDevil.Strength += 2;
+  gt.Const.World.Spawn.Troops.DesertDevil.Cost += 2;
+  gt.Const.World.Spawn.Troops.Executioner.Strength += 2;
+  gt.Const.World.Spawn.Troops.Executioner.Cost += 2;
+  gt.Const.World.Spawn.Troops.DesertStalker.Strength += 2;
+  gt.Const.World.Spawn.Troops.DesertStalker.Cost += 2;
   gt.Const.World.Spawn.Troops.BarbarianThrall.Strength += 1;
   gt.Const.World.Spawn.Troops.BarbarianThrall.Cost += 1;
-  gt.Const.World.Spawn.Troops.BarbarianMarauder.Strength += 3;
-  gt.Const.World.Spawn.Troops.BarbarianMarauder.Cost += 3;
+  gt.Const.World.Spawn.Troops.BarbarianMarauder.Strength += 2;
+  gt.Const.World.Spawn.Troops.BarbarianMarauder.Cost += 2;
   gt.Const.World.Spawn.Troops.BarbarianChampion.Strength += 3;
   gt.Const.World.Spawn.Troops.BarbarianChampion.Cost += 3;
   gt.Const.World.Spawn.Troops.BarbarianChosen.Cost += 3;
@@ -1099,42 +1306,56 @@ local rebalanceEnemiesStrength = function() {
   gt.Const.World.Spawn.Troops.Conscript.Cost -= 1;
   gt.Const.World.Spawn.Troops.ConscriptPolearm.Strength -= 1;
   gt.Const.World.Spawn.Troops.ConscriptPolearm.Cost -= 1;
-  gt.Const.World.Spawn.Troops.Officer.Strength += 1;
-  gt.Const.World.Spawn.Troops.Officer.Cost += 1;
+  gt.Const.World.Spawn.Troops.Officer.Strength += 2;
+  gt.Const.World.Spawn.Troops.Officer.Cost += 2;
+  gt.Const.World.Spawn.Troops.Greatsword.Strength += 2;
+  gt.Const.World.Spawn.Troops.Greatsword.Cost += 2;
   gt.Const.World.Spawn.Troops.Billman.Strength += 1;
   gt.Const.World.Spawn.Troops.Billman.Cost += 1;
   gt.Const.World.Spawn.Troops.Arbalester.Strength += 1;
   gt.Const.World.Spawn.Troops.Arbalester.Cost += 1;
   gt.Const.World.Spawn.Troops.Sergeant.Strength -= 1;
   gt.Const.World.Spawn.Troops.Sergeant.Cost -= 1;
-  gt.Const.World.Spawn.Troops.Knight.Strength += 1;
-  gt.Const.World.Spawn.Troops.Knight.Cost += 1;
+  gt.Const.World.Spawn.Troops.Knight.Strength += 2;
+  gt.Const.World.Spawn.Troops.Knight.Cost += 2;
   gt.Const.World.Spawn.Troops.Mercenary.Strength += 2;
   gt.Const.World.Spawn.Troops.Mercenary.Cost += 2;
-  gt.Const.World.Spawn.Troops.MercenaryLOW.Strength += 1;
-  gt.Const.World.Spawn.Troops.MercenaryLOW.Cost += 1;
-  gt.Const.World.Spawn.Troops.MercenaryRanged.Strength += 2;
-  gt.Const.World.Spawn.Troops.MercenaryRanged.Cost += 2;
-  gt.Const.World.Spawn.Troops.Swordmaster.Strength += -1;
-  gt.Const.World.Spawn.Troops.Swordmaster.Cost += -1;
-  gt.Const.World.Spawn.Troops.HedgeKnight.Strength += 1;
-  gt.Const.World.Spawn.Troops.HedgeKnight.Cost += 1;
-  gt.Const.World.Spawn.Troops.MasterArcher.Strength += 2;
-  gt.Const.World.Spawn.Troops.MasterArcher.Cost += 2;
-  gt.Const.World.Spawn.Troops.Cultist.Strength += 1;
-  gt.Const.World.Spawn.Troops.Cultist.Cost += 1;
-  gt.Const.World.Spawn.Troops.ZombieKnight.Strength -= 1;
-  gt.Const.World.Spawn.Troops.ZombieKnight.Cost -= 1;
-  gt.Const.World.Spawn.Troops.ZombieKnightBodyguard.Strength -= 1;
-  gt.Const.World.Spawn.Troops.ZombieKnightBodyguard.Cost -= 1;
-  gt.Const.World.Spawn.Troops.ZombieBetrayer.Strength -= 1;
-  gt.Const.World.Spawn.Troops.ZombieBetrayer.Cost -= 1;
-  gt.Const.World.Spawn.Troops.ZombieBoss.Strength -= 1;
-  gt.Const.World.Spawn.Troops.ZombieBoss.Cost -= 1;
+  //gt.Const.World.Spawn.Troops.MercenaryLOW.Strength += 1;
+  //gt.Const.World.Spawn.Troops.MercenaryLOW.Cost += 1;
+  gt.Const.World.Spawn.Troops.MercenaryRanged.Strength += 3;
+  gt.Const.World.Spawn.Troops.MercenaryRanged.Cost += 3;
+  //gt.Const.World.Spawn.Troops.Swordmaster.Strength += -1;
+  //gt.Const.World.Spawn.Troops.Swordmaster.Cost += -1;
+  gt.Const.World.Spawn.Troops.HedgeKnight.Strength += 2;
+  gt.Const.World.Spawn.Troops.HedgeKnight.Cost += 2;
+  gt.Const.World.Spawn.Troops.MasterArcher.Strength += 3;
+  gt.Const.World.Spawn.Troops.MasterArcher.Cost += 3;
+  gt.Const.World.Spawn.Troops.Cultist.Strength += 2;
+  gt.Const.World.Spawn.Troops.Cultist.Cost += 2;
+  gt.Const.World.Spawn.Troops.Ghost.Strength += 3;
+  gt.Const.World.Spawn.Troops.Ghost.Cost += 3;
+  //gt.Const.World.Spawn.Troops.Zombie.Strength += 1;
+  //gt.Const.World.Spawn.Troops.Zombie.Cost += 1;
+  gt.Const.World.Spawn.Troops.ZombieYeoman.Strength += 1;
+  gt.Const.World.Spawn.Troops.ZombieYeoman.Cost += 1;
+  gt.Const.World.Spawn.Troops.ZombieYeomanBodyguard.Strength += 1;
+  gt.Const.World.Spawn.Troops.ZombieYeomanBodyguard.Cost += 1;
+  gt.Const.World.Spawn.Troops.ZombieNomad.Strength += 1;
+  gt.Const.World.Spawn.Troops.ZombieNomad.Cost += 1;
+  gt.Const.World.Spawn.Troops.ZombieNomadBodyguard.Strength += 1;
+  gt.Const.World.Spawn.Troops.ZombieNomadBodyguard.Cost += 1;
+  //gt.Const.World.Spawn.Troops.ZombieKnight.Strength += 0;
+  //gt.Const.World.Spawn.Troops.ZombieKnight.Cost += 0;
+  //gt.Const.World.Spawn.Troops.ZombieKnightBodyguard.Strength -= 1;
+  //gt.Const.World.Spawn.Troops.ZombieKnightBodyguard.Cost -= 1;
+  //gt.Const.World.Spawn.Troops.ZombieBetrayer.Strength -= 1;
+  //gt.Const.World.Spawn.Troops.ZombieBetrayer.Cost -= 1;
+  //gt.Const.World.Spawn.Troops.ZombieBoss.Strength -= 1;
+  //gt.Const.World.Spawn.Troops.ZombieBoss.Cost -= 1;
 };
 
 local rebalancePlayerStrength = function() {
-  gt.Const.Ajfa.PlayerStrengthPerLevel <- 2.1;
+  gt.Const.Ajfa.PlayerStrengthPerLevel <- 1.9;
   ::mods_hookClass("entity/world/player_party", function(c) {
     c = ::mods_getClassForOverride(c, "player_party");
     c.updateStrength = function() {
@@ -1176,6 +1397,8 @@ local rebalancePlayerStrength = function() {
   nerfGifted();
   //nerfFortifiedMind();
   buffAnticipation();
+  buffBackstabber();
+  buffRotation();
   buffTaunt();
   nerfPolearmMastery();
   nerfThrowingMastery();
@@ -1186,6 +1409,7 @@ local rebalancePlayerStrength = function() {
   buffHeadHunter();
   nerfNimble();
   nerfBattleForged();
+  nerfDuelist();
 
   nerfBattleStandard();
 
@@ -1193,7 +1417,11 @@ local rebalancePlayerStrength = function() {
   buffShieldwall();
   buffShields();
   nerf2HWeapons();
+  rebalance1HWeapons();
+  rebalanceRangedWeapons();
+  ::ajfa.rebalanceBeasts();
+  fixNamedWeaponDeserialization();
 
   rebalanceEnemiesStrength();
-  //rebalancePlayerStrength();
+  rebalancePlayerStrength();
 });
