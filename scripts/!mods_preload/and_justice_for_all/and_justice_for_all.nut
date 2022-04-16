@@ -603,7 +603,7 @@ local buffBackstabber = function() {
 
 local buffAnticipation = function() {
   gt.Const.Ajfa.AnticipationRangedDefensePerTileFlatBonus <- 1;
-  gt.Const.Ajfa.AnticipationRangedDefensePerTileMultBonus <- 0.15;
+  gt.Const.Ajfa.AnticipationRangedDefensePerTileMultBonus <- 0.13;
   gt.Const.Ajfa.AnticipationRangedDefenseMinBonus <- 10;
   gt.Const.Strings.PerkDescription.Anticipation =
     "When being attacked with ranged weapons, gain [color=" +

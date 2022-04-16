@@ -141,7 +141,7 @@ With this change it makes sense to risk picking gifted only when having good tal
 #### Tier 3
 * **Backstabber** - Buff hit chance bonus from 5% to 6% per surrounding allay.
 * **Anticipation** - Buff of per-tile ranaged defense bonus from 10% to
-15% of your ranged defense.  
+13% of your ranged defense.  
 Aside from Goblin City, Anticipation would be rarely justified to be picked up.
 Goblin Ambushers also have Anticipation and 20 ranged defense, so they are not
 much easier to fight with this buff if you have the perk also.
