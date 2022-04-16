@@ -95,7 +95,7 @@ effect by foregoing another part of the battlefield.
 ### Perks
 
 ### Tier 1
-* **Fast Adaptation** - Buffed from 10% hit chance per stack to 12%. This perk
+* **Fast Adaptation** - Buffed from 10% hit chance per stack to 11%. This perk
 is usually picked on fodder bros and late game bros would generally get
 little from this perk. Maybe 3% hit chance increase on average. This Buff makes
 it a bit likely that this perk will dominate the development of fodder bros. I think

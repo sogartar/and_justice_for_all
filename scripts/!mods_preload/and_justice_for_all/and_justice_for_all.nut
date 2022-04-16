@@ -302,7 +302,7 @@ local buffFootwork = function() {
 };
 
 local buffFastAdaptation = function() {
-  gt.Const.Ajfa.FastAdaptationHitChanceBonusPerStack <- 12;
+  gt.Const.Ajfa.FastAdaptationHitChanceBonusPerStack <- 11;
 
   gt.Const.Strings.PerkDescription.FastAdaption =
     "Adapt to your opponent\'s moves! Gain an additional stacking [color=" + this.Const.UI.Color.PositiveValue + "]+" +
