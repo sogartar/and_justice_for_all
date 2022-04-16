@@ -1406,7 +1406,7 @@ local rebalancePlayerStrength = function() {
   buffReachAdvantage();
   //nerfLoneWolf();
   buffFootwork();
-  buffHeadHunter();
+  //buffHeadHunter();
   nerfNimble();
   nerfBattleForged();
   nerfDuelist();

@@ -175,9 +175,6 @@ Hopefully this buff does not force you to always pick both.
 * **Footwork** - Reduced the fatigue cost from 25 to 18.  
 This perk is way too taxing on fatigue for the utility it provides.
 #### Tier 6
-* **Head Hunter** - Buffed to give also +5% to hit chance when the first hit proks.  
-This change makes it easier to land the guaranteed second hit on the head.  
-Necrosavants would be even more scary :).
 * **Nimble** - Nerfed to provide at best 50% hitpoints damage reduction instead of 40%.  
 * **Battle Forged** - Nerfed to provide armor damage reduction equal to 4% of
 total armor. Reduced from 5%.  
