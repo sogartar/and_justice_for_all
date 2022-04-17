@@ -39,8 +39,8 @@ created. In old saves, characters that have been created already,
 either being hired or are available to hire, would not benefit from the buff.
 
 ### Defense
-Defense calculation is changed such that defense below 30 is increased
-and above 30 is decreased.
+Defense calculation is changed such that actual defense below 35 is increased
+and above 35 is decreased.
 
 ![Defense Scaling](scaled-defense.png)
 
